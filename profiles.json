@@ -8,6 +8,16 @@
             "test": 1
         },
         "Status": 1
+    },
+    "admin": {
+        "DisplayName": "Admin",
+        "Password": "$ib$butt$ih$tien$hoi$abc",
+        "Settings": {
+            "Theme": 0,
+            "CustomTheme": "",
+            "test": 1
+        },
+        "Status": 1
     }
 
 }
