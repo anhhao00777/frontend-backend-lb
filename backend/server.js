@@ -15,7 +15,7 @@ app.get('/api/profile', (req, res) => {
         const profile = JSON.parse(rawData);
         res.json(profile);
     } catch (error) {
-        res.status(500).json({ message: "Lỗi đọc file" });
+        res.status(500).json({ message: error });
     }
 });
 
