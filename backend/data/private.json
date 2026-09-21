@@ -1,1 +1,16 @@
-[]
+[
+    {
+    "id": "note-401",
+    "title": "Mật khẩu WiFi & Mã PIN nhà",
+    "content": "WiFi chính: Nhà Mới 2026 (Pass: 88889999). Mã cửa cuốn: 123456",
+    "createdAt": "2026-09-24T08:00:00Z",
+    "updatedAt": "2026-09-24T08:00:00Z"
+  },
+  {
+    "id": "note-402",
+    "title": "Ghi chú sức khỏe cá nhân",
+    "content": "Lịch tái khám răng định kỳ vào ngày 05/10 tại phòng khám bác sĩ Nam",
+    "createdAt": "2026-09-25T08:00:00Z",
+    "updatedAt": "2026-09-25T08:00:00Z"
+  }
+]
