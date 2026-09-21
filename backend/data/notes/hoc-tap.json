@@ -1,0 +1,16 @@
+[
+  {
+    "id": "note-201",
+    "title": "Lịch ôn thi Tiếng Anh",
+    "content": "Luyện 1 đề Listening & Reading lúc 20h00 tối Thứ 3 và Thứ 5",
+    "createdAt": "2026-09-20T08:00:00Z",
+    "updatedAt": "2026-09-20T08:00:00Z"
+  },
+  {
+    "id": "note-202",
+    "title": "Bào chuẩn bị bài thuyết trình",
+    "content": "Hoàn thành các slide môn Lập trình web trước Thứ 7 tuần này",
+    "createdAt": "2026-09-21T08:00:00Z",
+    "updatedAt": "2026-09-21T08:00:00Z"
+  }
+]
