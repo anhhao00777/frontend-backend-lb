@@ -26,11 +26,14 @@ node server.js
 ```
 Lưu ý: Backend sẽ chạy tại http://localhost:5000. Hệ thống sẽ tự động sinh thư mục
 data/ chứa các file JSON. Vui lòng không xóa thư mục này khi đang chạy ứng dụng.
-Bước 2: Khởi động Frontend (Giao diện)
+
+### Bước 2: Khởi động Frontend (Giao diện)
 Mở Terminal 2, di chuyển vào thư mục frontend và chạy lệnh:
+```
 cd frontend
 npm install
 npm run dev
+```
 Lưu ý: Frontend sẽ chạy tại http://localhost:5173 (hoặc cổng khác hiển thị trên
 terminal). Mở đường dẫn này trên trình duyệt (Khuyến nghị Google Chrome) để sử dụng
 hệ thống.
