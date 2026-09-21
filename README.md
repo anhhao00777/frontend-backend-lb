@@ -1,6 +1,8 @@
 # ĐỒ ÁN MÔN HỌC: ỨNG DỤNG QUẢN LÝ GHI CHÚ (REACTJS & NODEJS)
 **Giảng viên hướng dẫn:** Lữ Cao Tiến
-**Nhóm thực hiện:** Nhóm [Số nhóm]
+
+**Nhóm thực hiện:** Nhóm 4
+
 **Thành viên:**
 1. Lê Anh Hào - 0306241360 - Vai trò: PM & QA
 2. Lê Minh Thành - 0306241407 - Vai trò: Frontend Developer
