@@ -19,7 +19,7 @@ Dự án được chia làm 2 phần chạy độc lập. Vui lòng mở 2 cửa
 Prompt) để chạy song song.
 ### Bước 1: Khởi động Backend (Máy chủ API)
 Mở Terminal 1, di chuyển vào thư mục `backend` và chạy lệnh:
-```bash
+``` 
 cd backend
 npm install
 node server.js
