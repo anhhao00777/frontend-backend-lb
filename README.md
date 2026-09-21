@@ -34,9 +34,11 @@ cd frontend
 npm install
 npm run dev
 ```
+
 Lưu ý: Frontend sẽ chạy tại http://localhost:5173 (hoặc cổng khác hiển thị trên
 terminal). Mở đường dẫn này trên trình duyệt (Khuyến nghị Google Chrome) để sử dụng
 hệ thống.
+
 4. Tài khoản / Mật khẩu Demo
 Web không yêu cầu đăng nhập tài khoản.
 Để xem khu vực Ghi chú riêng tư, vui lòng vào menu "Cài đặt" để tạo mật khẩu mới.
