@@ -40,6 +40,7 @@ terminal). Mở đường dẫn này trên trình duyệt (Khuyến nghị Googl
 hệ thống.
 
 ### 4. Tài khoản / Mật khẩu Demo
+
 Web không yêu cầu đăng nhập tài khoản.
 Để xem khu vực Ghi chú riêng tư, vui lòng vào menu "Cài đặt" để tạo mật khẩu mới.
 ---
