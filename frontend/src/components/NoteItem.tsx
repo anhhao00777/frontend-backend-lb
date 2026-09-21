@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 
-export default function NoteItem({ id, title, content, topic, updatedAt }: { id: string, title: string, content: string, topic, updatedAt: string }) {
+export default function NoteItem({ id, title, content, topic, updatedAt }: { id: string, title: string, content: string, topic: string, updatedAt: string }) {
     return <>
         <NavLink to={`/note/${topic}/${id}`}>
             <div className="p-2">
