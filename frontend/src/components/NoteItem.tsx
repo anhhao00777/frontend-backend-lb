@@ -8,7 +8,7 @@ export default function NoteItem({ id, title, content, topic, updatedAt }: { id:
                     <div>{title}</div>
                     <div className="text-gray-500">{updatedAt}</div>
                 </div>
-                <div>{content.length > 20 ? content.substring(0, 17) + "..." : content}</div>
+                <div>{content.length > 25 ? content.substring(0, 23) + "..." : content}</div>
             </div>
         </NavLink>
 

@@ -4,6 +4,7 @@ import { MainLayout } from './components/MainLayout';
 import { Home } from './pages/Home';
 import { Private } from './pages/Private';
 import { Settings } from './pages/Settings';
+import ViewNote from './pages/ViewNote';
 
 function App() {
   return (
@@ -14,6 +15,8 @@ function App() {
             <Route index element={<Home />} />
             <Route path="private" element={<Private />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="note/:topic/:id" element={<ViewNote />} />
+
           </Route>
         </Routes>
       </BrowserRouter>

@@ -11,17 +11,17 @@ type notes = {
     
 }
 export const Home: React.FC = () => {
-  const [notes, setNotes] = useState<notes[] | []>([]);
+  const [notes, setNotes] = useState<string[] | []>([]);
   useEffect(()=>{
 
     (async()=>{
       try {
-        const req = await fetch("http://localhost:5000/api/notes/cong-viec", {
+        const req = await fetch("http://localhost:5000/api/topics/", {
           method: "GET",
           headers: {'Content-Type': 'application/json'}
         });
         const res = await req.json();
-        setNotes(res);
+        setNotes(res.topics);
       } catch (err) {
         setNotes([]);
       }
@@ -38,7 +38,7 @@ export const Home: React.FC = () => {
         <button className='btn bg-blue-400'>New</button>
       </div>
     </div>
-      {notes.length > 0 && <NoteList topic='cong-viec' notes={notes}></NoteList>}
+      {notes.length > 0 && notes.map(s=><NoteList topic={s}></NoteList>) }
     </div>
     
   );
