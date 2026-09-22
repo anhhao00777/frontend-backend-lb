@@ -29,8 +29,15 @@ export const Home: React.FC = () => {
   }, []);
   return (
     <div>
-      <h2>Trang chủ (Dashboard / Public Notes)</h2>
-      <p>Nơi hiển thị các ghi chú theo chủ đề (Học tập, Công việc...).</p>
+    <div className="flex justify-between">
+      <div>
+        <h2>Trang chủ (Dashboard / Public Notes)</h2>
+        <p>Nơi hiển thị các ghi chú theo chủ đề (Học tập, Công việc...).</p>
+      </div>
+      <div>
+        <button className='btn bg-blue-400'>New</button>
+      </div>
+    </div>
       {notes.length > 0 && <NoteList topic='cong-viec' notes={notes}></NoteList>}
     </div>
     

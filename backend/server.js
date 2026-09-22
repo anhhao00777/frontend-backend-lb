@@ -40,7 +40,7 @@ if (!fs.existsSync(notesDir)) {
 const getFilePath = (topic) => path.join(notesDir, `${topic}.json`);
 
 //new GET /api/topics -> trả về danh sách chủ đề
-router.get('/api/topics', (req, res) => {
+app.get('/api/topics', (req, res) => {
   try {
     // Đọc danh sách file trong thư mục notes
     const files = fs.readdirSync(notesDir);
@@ -58,7 +58,7 @@ router.get('/api/topics', (req, res) => {
 });
 
 // tạo topic mới
-router.post('/api/topics', (req, res) => {
+app.post('/api/topics', (req, res) => {
   const { topic } = req.body;
   if (!topic) return res.status(400).json({ success: false, message: 'Thiếu tên chủ đề' });
 
@@ -72,7 +72,7 @@ router.post('/api/topics', (req, res) => {
 });
 
 // Sửa chủ đề 
-router.put('/api/topics/:oldTopic', (req, res) => {
+app.put('/api/topics/:oldTopic', (req, res) => {
   const { oldTopic } = req.params;
   const { newTopic } = req.body;
 
@@ -93,7 +93,7 @@ router.put('/api/topics/:oldTopic', (req, res) => {
 });
 
 //Xóa Chủ đề
-router.delete('/api/topics/:topic', (req, res) => {
+app.delete('/api/topics/:topic', (req, res) => {
   const { topic } = req.params;
   const filePath = path.join(notesDir, `${topic}.json`);
 
