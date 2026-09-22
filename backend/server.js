@@ -57,6 +57,55 @@ router.get('/topics', (req, res) => {
   }
 });
 
+// tạo topic mới
+router.post('/topics', (req, res) => {
+  const { topic } = req.body;
+  if (!topic) return res.status(400).json({ success: false, message: 'Thiếu tên chủ đề' });
+
+  const filePath = path.join(notesDir, `${topic}.json`);
+  if (fs.existsSync(filePath)) {
+    return res.status(400).json({ success: false, message: 'Chủ đề đã tồn tại' });
+  }
+
+  fs.writeFileSync(filePath, JSON.stringify([], null, 2));
+  res.json({ success: true, message: `Đã tạo chủ đề ${topic}` });
+});
+
+// Sửa chủ đề 
+router.put('/topics/:oldTopic', (req, res) => {
+  const { oldTopic } = req.params;
+  const { newTopic } = req.body;
+
+  if (!newTopic) return res.status(400).json({ success: false, message: 'Thiếu tên mới' });
+
+  const oldPath = path.join(notesDir, `${oldTopic}.json`);
+  const newPath = path.join(notesDir, `${newTopic}.json`);
+
+  if (!fs.existsSync(oldPath)) {
+    return res.status(404).json({ success: false, message: 'Chủ đề cũ không tồn tại' });
+  }
+  if (fs.existsSync(newPath)) {
+    return res.status(400).json({ success: false, message: 'Tên mới đã tồn tại' });
+  }
+
+  fs.renameSync(oldPath, newPath);
+  res.json({ success: true, message: `Đã đổi tên chủ đề ${oldTopic} thành ${newTopic}` });
+});
+
+//Xóa Chủ đề
+router.delete('/topics/:topic', (req, res) => {
+  const { topic } = req.params;
+  const filePath = path.join(notesDir, `${topic}.json`);
+
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ success: false, message: 'Chủ đề không tồn tại' });
+  }
+
+  fs.unlinkSync(filePath);
+  res.json({ success: true, message: `Đã xóa chủ đề ${topic}` });
+});
+
+
 // 1. Lấy danh sách ghi chú (GET)
 app.get('/api/notes/:topic', (req, res) => {
     const filePath = getFilePath(req.params.topic);
