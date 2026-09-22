@@ -39,6 +39,24 @@ if (!fs.existsSync(notesDir)) {
 
 const getFilePath = (topic) => path.join(notesDir, `${topic}.json`);
 
+//new GET /api/topics -> trả về danh sách chủ đề
+router.get('/topics', (req, res) => {
+  try {
+    // Đọc danh sách file trong thư mục notes
+    const files = fs.readdirSync(notesDir);
+
+    // Lấy tên chủ đề từ tên file (bỏ phần .json)
+    const topics = files
+      .filter(file => file.endsWith('.json'))
+      .map(file => path.basename(file, '.json'));
+
+    res.json({ topics });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Lỗi khi đọc danh sách chủ đề' });
+  }
+});
+
 // 1. Lấy danh sách ghi chú (GET)
 app.get('/api/notes/:topic', (req, res) => {
     const filePath = getFilePath(req.params.topic);
