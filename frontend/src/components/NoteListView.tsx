@@ -3,11 +3,11 @@ import NoteItem from "./NoteItem"
 
 type notes = {
 
-    id?: string,
-    title?: string,
-    content?: string,
-    createdAt?: string,
-    updatedAt?: string
+    id: string,
+    title: string,
+    content: string,
+    createdAt: string,
+    updatedAt: string
 
 }
 
@@ -33,7 +33,7 @@ export default function NoteList({ topic, onCreateNote }: { topic: string, onCre
         <div className="p-2">
             <div className="flex justify-between">
                 <div className="text-2xl">{topic}</div>
-                <button onClick={()=>onCreateNote(topic)} className='btn bg-blue-400 p-2 text-2xl'>New</button>
+                <button onClick={()=>onCreateNote(topic)} className='btn bg-blue-400 p-2 text-2xl hover:bg-blue-600'>New Note</button>
 
             </div>
             <div>
