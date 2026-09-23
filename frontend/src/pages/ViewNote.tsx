@@ -42,7 +42,7 @@ export default function ViewNote() {
 
     const handleChange = (event: KeyboardEvent<HTMLDivElement>, key: string) => {
         const e = event.nativeEvent.target as HTMLDivElement;
-        setNewContent({ ...content, [key]: e.textContent });
+        setNewContent({ ...content, ...newContent, [key]: e.textContent });
     }
     const saveContent = async () => {
         try {
