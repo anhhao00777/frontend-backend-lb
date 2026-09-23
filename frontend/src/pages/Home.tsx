@@ -55,7 +55,7 @@ export const Home: React.FC = () => {
 
 
   }
-  function createName(text:string):string {
+  function createName(text: string): string {
     return (text.split(" ").join("-").normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D')).toLowerCase();
   }
   const createTopic = async () => {
@@ -74,7 +74,7 @@ export const Home: React.FC = () => {
       const res = await req.json();
       if (res?.success) {
         alert("Success: " + res?.message);
-        setNotes([...notes, fixedName])
+        setNotes([...notes, fixedName]);
       }
     } catch (err) {
       alert("fail: " + err);
@@ -82,7 +82,23 @@ export const Home: React.FC = () => {
 
 
   }
-  
+  const handleDelete = async (topic: string, id: string, title:string, callback:Function) => {
+    const conf = confirm("Are you sure to delete: " + title)
+    if(!conf) return;
+    try {
+      const req = await fetch(`http://localhost:5000/api/notes/${topic}/${id}`, {
+        method: "DELETE",
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const res = await req.json();
+      if (res?.success) {
+        alert("Success: " + res?.message);
+        callback();
+      }
+    } catch (err) {
+      alert("fail: " + err);
+    }
+  }
   return (
     <div>
       <div className="flex justify-between">
@@ -94,7 +110,7 @@ export const Home: React.FC = () => {
           <button onClick={createTopic} className='btn bg-blue-400 p-2 text-2xl hover:bg-blue-600'>New Topic</button>
         </div>
       </div>
-      {notes.length > 0 && notes.map(s => <NoteList key={s} onCreateNote={createNote} topic={s}></NoteList>)}
+      {notes.length > 0 && notes.map(s => <NoteList onDelete={handleDelete} key={s} onCreateNote={createNote} topic={s}></NoteList>)}
     </div>
 
   );
