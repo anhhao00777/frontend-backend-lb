@@ -12,6 +12,8 @@
 - **Backend:** Node.js, Express.js.
 - **Cơ sở dữ liệu:** File System (lưu trữ bằng định dạng `.json` để dễ quản lý và
 triển khai).
+> [!IMPORTANT]
+> Hệ thống sử dụng file JSON để lưu dữ liệu tại thư mục backend/data, vui lòng không xóa thư mục này.
 ## 2. Yêu cầu môi trường
 - Máy tính cần cài đặt sẵn **Node.js** (phiên bản v16 trở lên).
 ## 3. Hướng dẫn Cài đặt & Chạy dự án (Rất quan trọng)

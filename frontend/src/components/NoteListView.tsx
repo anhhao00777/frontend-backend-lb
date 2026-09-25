@@ -11,7 +11,7 @@ type notes = {
 
 }
 
-export default function NoteList({ topic, onCreateNote }: { topic: string, onCreateNote:Function }) {
+export default function NoteList({ topic, onCreateNote, onDelete }: { topic: string, onCreateNote:Function, onDelete:Function }) {
     const [notes, setNote] = useState<notes[] | undefined>(undefined);
     useEffect(() => {
 
@@ -29,6 +29,11 @@ export default function NoteList({ topic, onCreateNote }: { topic: string, onCre
             }
         })();
     }, [topic]);
+    const onDel = (topic:string, id:string, title:string)=>{
+        onDelete(topic, id, title, ()=>{
+            setNote(notes?.filter(n=>n.id!==id));
+        });
+    }
     return <>
         <div className="p-2">
             <div className="flex justify-between">
@@ -37,7 +42,7 @@ export default function NoteList({ topic, onCreateNote }: { topic: string, onCre
 
             </div>
             <div>
-                {notes && notes.map(i => <NoteItem key={i.id} id={i.id} title={i.title} content={i.content} updatedAt={i.updatedAt} topic={topic}></NoteItem>)}
+                {notes && notes.map(i => <NoteItem onDelete={onDel} key={i.id} id={i.id} title={i.title} content={i.content} updatedAt={i.updatedAt} topic={topic}></NoteItem>)}
             </div>
         </div>
     </>
