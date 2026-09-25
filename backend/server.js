@@ -39,6 +39,117 @@ if (!fs.existsSync(notesDir)) {
 
 const getFilePath = (topic) => path.join(notesDir, `${topic}.json`);
 
+//new GET /api/topics -> trả về danh sách chủ đề
+app.get('/api/topics', (req, res) => {
+  try {
+    // Đọc danh sách file trong thư mục notes
+    const files = fs.readdirSync(notesDir);
+
+    // Lấy tên chủ đề từ tên file (bỏ phần .json)
+    const topics = files
+      .filter(file => file.endsWith('.json'))
+      .map(file => path.basename(file, '.json'));
+
+    res.json({ topics });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Lỗi khi đọc danh sách chủ đề' });
+  }
+});
+
+// tạo topic mới
+app.post('/api/topics', (req, res) => {
+  const { topic } = req.body;
+  if (!topic) return res.status(400).json({ success: false, message: 'Thiếu tên chủ đề' });
+
+  const filePath = path.join(notesDir, `${topic}.json`);
+  if (fs.existsSync(filePath)) {
+    return res.status(400).json({ success: false, message: 'Chủ đề đã tồn tại' });
+  }
+
+  fs.writeFileSync(filePath, JSON.stringify([], null, 2));
+  res.json({ success: true, message: `Đã tạo chủ đề ${topic}` });
+});
+
+// Sửa chủ đề 
+app.put('/api/topics/:oldTopic', (req, res) => {
+  const { oldTopic } = req.params;
+  const { newTopic } = req.body;
+
+  if (!newTopic) return res.status(400).json({ success: false, message: 'Thiếu tên mới' });
+
+  const oldPath = path.join(notesDir, `${oldTopic}.json`);
+  const newPath = path.join(notesDir, `${newTopic}.json`);
+
+  if (!fs.existsSync(oldPath)) {
+    return res.status(404).json({ success: false, message: 'Chủ đề cũ không tồn tại' });
+  }
+  if (fs.existsSync(newPath)) {
+    return res.status(400).json({ success: false, message: 'Tên mới đã tồn tại' });
+  }
+
+  fs.renameSync(oldPath, newPath);
+  res.json({ success: true, message: `Đã đổi tên chủ đề ${oldTopic} thành ${newTopic}` });
+});
+
+//Xóa Chủ đề
+app.delete('/api/topics/:topic', (req, res) => {
+  const { topic } = req.params;
+  const filePath = path.join(notesDir, `${topic}.json`);
+
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ success: false, message: 'Chủ đề không tồn tại' });
+  }
+
+  fs.unlinkSync(filePath);
+  res.json({ success: true, message: `Đã xóa chủ đề ${topic}` });
+});
+
+// Hàm loại bỏ dấu tiếng Việt và chuyển về chữ thường
+const removeVietnameseTones = (str) => {
+    if (!str) return '';
+    return str
+        .normalize('NFD') // Tách ký tự gốc và dấu
+        .replace(/[\u0300-\u036f]/g, '') // Xóa các dấu thanh/dấu phụ
+        .replace(/đ/g, 'd')
+        .replace(/Đ/g, 'd')
+        .toLowerCase()
+        .trim();
+};
+
+// Tim kiem ghi chu
+app.get('/api/notes/search/:key',(req,res) =>{
+    const key = removeVietnameseTones(req.params.key);
+    console.log(key);
+    if (!key) {
+        return res.status(400).json({ message: 'Vui lòng cung cấp từ khóa tìm kiếm' });
+    }
+    try{
+        const files = fs.readdirSync(notesDir).filter(file => file.endsWith('.json'));
+        let results = [];
+        files.forEach(file => {
+            const topic = path.basename(file, '.json');
+            const filePath = path.join(notesDir, file);
+            const notes = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+
+            const matchedNotes = notes
+                .filter(note =>{
+                    const titleClean = removeVietnameseTones(note.title);
+                    const contentClean = removeVietnameseTones(note.content);
+                    return titleClean.includes(key) || contentClean.includes(key);
+                }).map(note => ({ ...note, topic })); // Gắn thêm thông tin topic vào kết quả
+
+            results = results.concat(matchedNotes);
+        });
+        res.json(results);
+    }catch(error) {
+        res.status(500).json({ message: "Lỗi tìm kiếm ghi chú " + error});
+    }
+});
+// Sap xep ghi chu theo tieu de 
+
+// Phan trang
+
 // 1. Lấy danh sách ghi chú (GET)
 app.get('/api/notes/:topic', (req, res) => {
     const filePath = getFilePath(req.params.topic);
