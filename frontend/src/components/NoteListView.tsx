@@ -1,4 +1,4 @@
-import { useEffect, useState, type MouseEventHandler } from "react"
+import { useEffect, useState } from "react"
 import NoteItem from "./NoteItem"
 
 type notes = {
