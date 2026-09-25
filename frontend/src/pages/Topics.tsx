@@ -12,7 +12,7 @@ type notes = {
   updatedAt?: string
 
 }
-export const Home: React.FC = () => {
+export const Topics: React.FC = () => {
   const [notes, setNotes] = useState<string[] | []>([]);
   const nav = useNavigate();
 
@@ -34,6 +34,7 @@ export const Home: React.FC = () => {
 
   let creating = false;
   const createNote = async (topic: string) => {
+    if(creating) return;
     creating = true;
     const note: notes = {
       title: "",
@@ -53,6 +54,7 @@ export const Home: React.FC = () => {
     } catch (err) {
       alert("fail: " + err);
     }
+    creating = false;
 
 
   }
@@ -134,10 +136,10 @@ export const Home: React.FC = () => {
           <button onClick={createTopic} className='btn bg-blue-400 p-2 text-2xl hover:bg-blue-600'>New Topic</button>
         </div>
       </div>
-      {/* {notes.length > 0 && notes.map(s => <NoteList search={search} onDeleteTopic={deleteTopic} onDelete={handleDelete} key={s} onCreateNote={createNote} topic={s}></NoteList>)} */}
+        {notes.length > 0 && notes.map(s => <NoteList search={search} onDeleteTopic={deleteTopic} onDelete={handleDelete} key={s} onCreateNote={createNote} topic={s}></NoteList>)}
     </div>
 
   );
 };
 
-export default Home;
+export default Topics;
