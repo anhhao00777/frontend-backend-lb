@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 
 export default function NoteItem({ id, title, content, topic, updatedAt, onDelete }: { id: string, title: string, content: string, topic: string, updatedAt: string, onDelete:Function }) {
     return <>
-        <div className="p-2 flex justify-between">
+        <div className="p-2 flex justify-between hover:bg-blue-100">
             <NavLink to={`/note/${topic}/${id}`}>
                 <div className="flex justify-between gap-5">
                     <div>{title}</div>

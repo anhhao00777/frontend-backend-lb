@@ -41,6 +41,21 @@ export const MainLayout: React.FC = () => {
             </NavLink>
 
             <NavLink
+              to="/topics"
+              end
+              className={({ isActive }) =>
+                [
+                  'block px-3 py-2.5 text-sm font-medium transition-colors',
+                  isActive
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800',
+                ].join(' ')
+              }
+            >
+              Topics
+            </NavLink>
+
+            <NavLink
               to="/private"
               className={({ isActive }) =>
                 [
