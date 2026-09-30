@@ -61,7 +61,7 @@ export default function NoteList({ topic, onCreateNote, onDelete, onDeleteTopic,
     return <>
     {noteView && noteView.length>0 &&
             <div className="p-2">
-                <div className="flex justify-between">
+                <div className="flex justify-between p-2 light:hover:bg-blue-100 dark:hover:outline">
                     <div className="text-2xl select-none cursor-pointer" onClick={()=>setHidden(!hidden)}>{topicName}</div>
                     <div className="flex justify-between gap-4">
 

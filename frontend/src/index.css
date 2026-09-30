@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
-
+@custom-variant light (html:not(.dark) &);
 :root {
   font-family: Inter, 'Segoe UI', sans-serif;
   line-height: 1.5;
