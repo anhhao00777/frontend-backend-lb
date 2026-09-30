@@ -17,13 +17,14 @@ export const Home: React.FC = () => {
   const nav = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [page, setPage] = useState(parseInt(searchParams.get("page") || "1") || 1);
+  const [page, setPage] = useState(searchParams.get("page") || "1");
   const [sort, setSort] = useState(searchParams.get("sort") || "date");
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(searchParams.get("s") || "");
 
 
   useEffect(() => {
     let loading = true;
+    setSearchParams(search ? { page, sort, 's': search} : { page, sort});
     (async () => {
       try {
         const req = await fetch(`http://localhost:5000/api/notes?page=${page ?? 1}&sort=${sort ?? "date"}${search.length > 0 ? "&s=" + search : ""}`, {
@@ -44,16 +45,13 @@ export const Home: React.FC = () => {
 
   const handleSortChange = (ev: ChangeEvent<HTMLSelectElement>) => {
     setSort(ev.target.value || "date");
-    setSearchParams({ page: page.toString(), "sort": ev.target.value, "s": search });
   }
   const handlePageChange = (ev: ChangeEvent<HTMLInputElement>) => {
-    setPage(parseInt(ev.target.value || "1"));
-    setSearchParams({ "page": ev.target.value, sort, "s": search });
+    setPage(ev.target.value || "1");
   }
 
   const onSearch = (ev: ChangeEvent<HTMLInputElement>) => {
     setSearch(ev.target.value);
-    setSearchParams({ page: page.toString(), sort, "s": ev.target.value });
   }
 
   let creating = false;
@@ -98,7 +96,7 @@ export const Home: React.FC = () => {
   }
   return (
     <div>
-      <SearchBar onSearch={(onSearch)}></SearchBar>
+      <SearchBar value={search} onSearch={(onSearch)}></SearchBar>
       <div className="flex justify-between">
         <div>
           <h2>Trang chủ (Dashboard / Public Notes)</h2>
@@ -106,16 +104,16 @@ export const Home: React.FC = () => {
         </div>
         <div>
 
-          <select className='outline-solid outline-2' onChange={handleSortChange}>
+          <select className='outline-solid outline-2' onChange={handleSortChange}value={sort}>
             <option value="az">A-Z</option>
             <option value="za">Z-A</option>
             <option value="date" selected>Date</option>
             <option value="dated">Date Rev</option>
           </select>
 
-          <button onClick={()=>setPage((page-1)>0 ? page-1 : 1)} className='btn bg-blue-400 p-2 text-2xl hover:bg-blue-600'>Prev</button>
+          <button onClick={()=>{ let pg = parseInt(page);setPage((pg-1)>0 ? pg-1 + "" : "1")}} className='btn bg-blue-400 p-2 text-2xl hover:bg-blue-600'>Prev</button>
           <input type="number" onChange={handlePageChange} value={page} className='w-15'/>
-          <button onClick={()=>setPage(page+1)} className='btn bg-blue-400 p-2 text-2xl hover:bg-blue-600'>Next</button>
+          <button onClick={()=>setPage((parseInt(page)+1)+"")} className='btn bg-blue-400 p-2 text-2xl hover:bg-blue-600'>Next</button>
 
           <button onClick={()=>createNote("no-topic")} className='btn bg-green-400 p-2 text-2xl hover:bg-green-600'>New</button>
         </div>
