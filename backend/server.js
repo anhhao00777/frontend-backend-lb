@@ -1,9 +1,17 @@
 const express = require('express');
 const cors = require('cors');
 
+const bcrypt = require("bcrypt");
+
+const ContentCryp = require("./ContentCryp");
+
 const fs = require('fs');
 const path = require('path');
 const app = express();
+
+const key = "MIICIjANBFKTADME";
+
+const encrypt = new ContentCryp(key);
 app.use(cors()); // Cho phép FE gọi API
 app.use(express.json()); // Đọc dữ liệu JSON từ FE gửi lên
 const profilePath = path.join(__dirname, 'data', 'profile.json');
@@ -23,9 +31,17 @@ app.get('/api/profile', (req, res) => {
 app.put('/api/profile', (req, res) => {
     try {
         const newProfile = req.body;
-        // Ghi đè dữ liệu mới vào file
-        fs.writeFileSync(profilePath, JSON.stringify(newProfile, null, 2), 'utf8');
-        res.json({ success: true, message: "Đã cập nhật Profile" });
+        bcrypt.hash(newProfile.password, 10, function (err, hash) {
+            if (err) {
+                res.status(500).json({ message: "Lỗi ghi file" });
+                return;
+            }
+            newProfile.password = hash;
+            // Ghi đè dữ liệu mới vào file
+            fs.writeFileSync(profilePath, JSON.stringify(newProfile, null, 2), 'utf8');
+            res.json({ success: true, message: "Đã cập nhật Profile" });
+        });
+
     } catch (error) {
         res.status(500).json({ message: "Lỗi ghi file" });
     }
@@ -34,77 +50,131 @@ app.put('/api/profile', (req, res) => {
 const notesDir = path.join(__dirname, 'data', 'notes');
 // Khởi tạo thư mục tự động nếu chưa tồn tại
 if (!fs.existsSync(notesDir)) {
- fs.mkdirSync(notesDir, { recursive: true });
+    fs.mkdirSync(notesDir, { recursive: true });
 }
 
 const getFilePath = (topic) => path.join(notesDir, `${topic}.json`);
 
 //new GET /api/topics -> trả về danh sách chủ đề
 app.get('/api/topics', (req, res) => {
-  try {
-    // Đọc danh sách file trong thư mục notes
-    const files = fs.readdirSync(notesDir);
+    try {
+        // Đọc danh sách file trong thư mục notes
+        const files = fs.readdirSync(notesDir);
 
-    // Lấy tên chủ đề từ tên file (bỏ phần .json)
-    const topics = files
-      .filter(file => file.endsWith('.json'))
-      .map(file => path.basename(file, '.json'));
+        // Lấy tên chủ đề từ tên file (bỏ phần .json)
+        const topics = files
+            .filter(file => file.endsWith('.json'))
+            .map(file => path.basename(file, '.json'));
 
-    res.json({ topics });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Lỗi khi đọc danh sách chủ đề' });
-  }
+        res.json({ topics });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Lỗi khi đọc danh sách chủ đề' });
+    }
 });
 
 // tạo topic mới
 app.post('/api/topics', (req, res) => {
-  const { topic } = req.body;
-  if (!topic) return res.status(400).json({ success: false, message: 'Thiếu tên chủ đề' });
+    const { topic } = req.body;
+    if (!topic) return res.status(400).json({ success: false, message: 'Thiếu tên chủ đề' });
 
-  const filePath = path.join(notesDir, `${topic}.json`);
-  if (fs.existsSync(filePath)) {
-    return res.status(400).json({ success: false, message: 'Chủ đề đã tồn tại' });
-  }
+    const filePath = path.join(notesDir, `${topic}.json`);
+    if (fs.existsSync(filePath)) {
+        return res.status(400).json({ success: false, message: 'Chủ đề đã tồn tại' });
+    }
 
-  fs.writeFileSync(filePath, JSON.stringify([], null, 2));
-  res.json({ success: true, message: `Đã tạo chủ đề ${topic}` });
+    fs.writeFileSync(filePath, JSON.stringify([], null, 2));
+    res.json({ success: true, message: `Đã tạo chủ đề ${topic}` });
 });
 
 // Sửa chủ đề 
 app.put('/api/topics/:oldTopic', (req, res) => {
-  const { oldTopic } = req.params;
-  const { newTopic } = req.body;
+    const { oldTopic } = req.params;
+    const { newTopic } = req.body;
 
-  if (!newTopic) return res.status(400).json({ success: false, message: 'Thiếu tên mới' });
+    if (!newTopic) return res.status(400).json({ success: false, message: 'Thiếu tên mới' });
 
-  const oldPath = path.join(notesDir, `${oldTopic}.json`);
-  const newPath = path.join(notesDir, `${newTopic}.json`);
+    const oldPath = path.join(notesDir, `${oldTopic}.json`);
+    const newPath = path.join(notesDir, `${newTopic}.json`);
 
-  if (!fs.existsSync(oldPath)) {
-    return res.status(404).json({ success: false, message: 'Chủ đề cũ không tồn tại' });
-  }
-  if (fs.existsSync(newPath)) {
-    return res.status(400).json({ success: false, message: 'Tên mới đã tồn tại' });
-  }
+    if (!fs.existsSync(oldPath)) {
+        return res.status(404).json({ success: false, message: 'Chủ đề cũ không tồn tại' });
+    }
+    if (fs.existsSync(newPath)) {
+        return res.status(400).json({ success: false, message: 'Tên mới đã tồn tại' });
+    }
 
-  fs.renameSync(oldPath, newPath);
-  res.json({ success: true, message: `Đã đổi tên chủ đề ${oldTopic} thành ${newTopic}` });
+    fs.renameSync(oldPath, newPath);
+    res.json({ success: true, message: `Đã đổi tên chủ đề ${oldTopic} thành ${newTopic}` });
 });
 
 //Xóa Chủ đề
 app.delete('/api/topics/:topic', (req, res) => {
-  const { topic } = req.params;
-  const filePath = path.join(notesDir, `${topic}.json`);
+    const { topic } = req.params;
+    const filePath = path.join(notesDir, `${topic}.json`);
 
-  if (!fs.existsSync(filePath)) {
-    return res.status(404).json({ success: false, message: 'Chủ đề không tồn tại' });
-  }
+    if (!fs.existsSync(filePath)) {
+        return res.status(404).json({ success: false, message: 'Chủ đề không tồn tại' });
+    }
 
-  fs.unlinkSync(filePath);
-  res.json({ success: true, message: `Đã xóa chủ đề ${topic}` });
+    fs.unlinkSync(filePath);
+    res.json({ success: true, message: `Đã xóa chủ đề ${topic}` });
 });
 
+
+const compare = (search, content) => {
+    return (content.toLocaleLowerCase().indexOf(search.toLocaleLowerCase()) !== -1);
+}
+// 0. Lấy danh sách ghi chú (GET) - paged - sorted
+app.get('/api/notes', (req, res) => {
+    const perPage = 5;
+    const page = req.query.page || '1';
+    const sort = req.query.sort || "date";
+    const search = req.query.s || "";
+    try {
+
+        fs.readdir(notesDir, async (err, files) => {
+            const pFile = files.map((file) => {
+                return new Promise((resolve, reject) => {
+                    fs.readFile(path.join(notesDir, file), 'utf8', (err, cont) => {
+                        if (err) { reject(err); return; }
+                        const data = JSON.parse(cont).map(i => ({ ...i, topic: file.replace(".json", "") }));
+                        resolve(data);
+                    });
+                });
+
+            });
+            let all = (await Promise.all(pFile)).flat();
+            switch (sort) {
+                case "za":
+                    all.sort((a, b) => b.title.localeCompare(a.title));
+                    break;
+                case "dated":
+                    all.sort((a, b) => new Date(a.updatedAt) - new Date(b.updatedAt));
+                    break;
+                case "date":
+                    all.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+                    break;
+                default:
+                    all.sort((a, b) => a.title.localeCompare(b.title));
+                    break;
+            }
+
+            if (search.length > 1) {
+                all = all.filter(item => (compare(search, item.title) || compare(search, item.content)));
+            }
+
+            let pageInt = isNaN(page * 1) ? 1 : page * 1;
+            if(pageInt<1) pageInt = 1;
+            all = all.slice((pageInt - 1) * perPage, (pageInt * perPage));
+
+
+            res.json(all);
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Lỗi đọc danh sách ghi chú" });
+    }
+});
 
 // 1. Lấy danh sách ghi chú (GET)
 app.get('/api/notes/:topic', (req, res) => {
@@ -114,8 +184,7 @@ app.get('/api/notes/:topic', (req, res) => {
         const data = fs.readFileSync(filePath, 'utf8');
         res.json(JSON.parse(data));
     } catch (error) {
-        res.status(500).json({ message: "Lỗi đọc danh sách ghi chú" })
-    ;
+        res.status(500).json({ message: "Lỗi đọc danh sách ghi chú" });
     }
 });
 
@@ -123,8 +192,8 @@ app.get('/api/notes/:topic', (req, res) => {
 app.post('/api/notes/:topic', (req, res) => {
     const filePath = getFilePath(req.params.topic);
     try {
-        let notes = fs.existsSync(filePath) ? 
-            JSON.parse(fs.readFileSync(filePath,'utf8')) : [];
+        let notes = fs.existsSync(filePath) ?
+            JSON.parse(fs.readFileSync(filePath, 'utf8')) : [];
         const newNote = {
             id: Date.now().toString(),
             title: req.body.title || "Không tiêu đề",
@@ -177,18 +246,27 @@ app.delete('/api/notes/:topic/:id', (req, res) => {
 const privateNotesFile = path.join(__dirname, 'data', 'private.json');
 // Khởi tạo file private.json nếu chưa tồn tại
 if (!fs.existsSync(privateNotesFile)) {
- fs.writeFileSync(privateNotesFile, '[]', 'utf8');
+    fs.writeFileSync(privateNotesFile, '[]', 'utf8');
 }
 // 1. API Xác thực mật khẩu
 app.post('/api/private/auth', (req, res) => {
     try {
         const profile = JSON.parse(fs.readFileSync(profilePath, 'utf8'));
         // Kiểm tra pass truyền lên có khớp với pass trong profile không
-        if (profile.password === req.body.password) {
-        res.json({ success: true });
-        } else {
-            res.status(401).json({ success: false, message: "Sai mật khẩu!" });
-        }
+        bcrypt.compare(req.body.password, profile.password, function (err, resp) {
+            if (resp) {
+                // Password matched
+                res.json({ success: true });
+            } else {
+                // Password didn't match
+                res.status(500).json({ message: "Lỗi hệ thống xác thực" });
+            }
+        });
+        // if (profile.password === req.body.password) {
+        //     res.json({ success: true });
+        // } else {
+        //     res.status(401).json({ success: false, message: "Sai mật khẩu!" });
+        // }
     } catch (error) {
         res.status(500).json({ message: "Lỗi hệ thống xác thực" });
     }
@@ -198,9 +276,15 @@ app.post('/api/private/auth', (req, res) => {
 app.get('/api/private/notes', (req, res) => {
     try {
         const data = fs.readFileSync(privateNotesFile, 'utf8');
-        res.json(JSON.parse(data));
+        let obj = JSON.parse(data);
+        obj = obj.map(i => {
+            return { ...i, title: encrypt.decrypt(i.title || "Lưu bút mật"), content: encrypt.decrypt(i.content || "private") }
+        });
+
+        res.json(obj);
     } catch (error) {
         res.status(500).json({ message: "Lỗi đọc ghi chú riêng tư" });
+        console.log(error);
     }
 });
 
@@ -210,8 +294,8 @@ app.post('/api/private/notes', (req, res) => {
         let notes = JSON.parse(fs.readFileSync(privateNotesFile, 'utf8'));
         const newNote = {
             id: Date.now().toString(),
-            title: req.body.title || "Lưu bút mật",
-            content: req.body.content || "",
+            title: encrypt.encrypt(req.body.title || "Lưu bút mật"),
+            content: encrypt.encrypt(req.body.content || "private"),
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
         };

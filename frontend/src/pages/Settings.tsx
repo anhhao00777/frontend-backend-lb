@@ -94,7 +94,6 @@ export const Settings: React.FC = () => {
           <input
             type="password"
             placeholder="Nhập mật khẩu bảo mật..."
-            value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full px-3.5 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
           />
