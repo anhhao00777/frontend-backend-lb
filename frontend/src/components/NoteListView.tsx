@@ -11,10 +11,11 @@ type notes = {
 
 }
 
-export default function NoteList({ topic, onCreateNote, onDelete, onDeleteTopic, search }: { topic: string, onCreateNote: Function, onDelete: Function, onDeleteTopic: Function, search: string }) {
+export default function NoteList({ topic, onCreateNote, onDelete, onDeleteTopic, onEditTopic, search }: { topic: string, onCreateNote: Function, onDelete: Function, onDeleteTopic: Function, onEditTopic:Function, search: string }) {
     const [notes, setNote] = useState<notes[] | undefined>(undefined);
     const [noteView, setView] = useState<notes[] | undefined>(undefined);
     const [hidden, setHidden] = useState(true);
+    const [topicName, setTopicName] = useState(topic);
     useEffect(() => {
 
         (async () => {
@@ -36,6 +37,12 @@ export default function NoteList({ topic, onCreateNote, onDelete, onDeleteTopic,
             setNote(notes?.filter(n => n.id !== id));
         });
     }
+    const onEdit = ()=>{
+        onEditTopic(topicName, (name:string)=>{
+            setTopicName(name);
+        });
+
+    }
     useEffect(()=>{
         if(search.length > 0) {
             setView(notes?.filter(i=>(compare(search, i.title) || compare(search, i.content))));
@@ -45,7 +52,7 @@ export default function NoteList({ topic, onCreateNote, onDelete, onDeleteTopic,
             setView(notes);
             setHidden(true);
         }
-    }, [notes, search])
+    }, [notes, search]);
 
     const compare = (search:string, content:string)=>{
         return (content.toLocaleLowerCase().indexOf(search.toLocaleLowerCase()) !== -1);
@@ -55,17 +62,17 @@ export default function NoteList({ topic, onCreateNote, onDelete, onDeleteTopic,
     {noteView && noteView.length>0 &&
             <div className="p-2">
                 <div className="flex justify-between">
-                    <div className="text-2xl select-none cursor-pointer" onClick={()=>setHidden(!hidden)}>{topic}</div>
+                    <div className="text-2xl select-none cursor-pointer" onClick={()=>setHidden(!hidden)}>{topicName}</div>
                     <div className="flex justify-between gap-4">
 
-                        <button onClick={() => onCreateNote(topic)} className='btn bg-yellow-400 p-2 text-2xl hover:bg-yellow-600'>Edit</button>
-                        <button onClick={() => onCreateNote(topic)} className='btn bg-blue-400 p-2 text-2xl hover:bg-blue-600'>New Note</button>
-                        <button onClick={() => onDeleteTopic(topic)} className='btn bg-red-400 p-2 text-2xl hover:bg-red-600'>Delete</button>
+                        <button onClick={onEdit} className='btn bg-yellow-400 p-2 text-2xl hover:bg-yellow-600'>Edit</button>
+                        <button onClick={() => onCreateNote(topicName)} className='btn bg-blue-400 p-2 text-2xl hover:bg-blue-600'>New Note</button>
+                        <button onClick={() => onDeleteTopic(topicName)} className='btn bg-red-400 p-2 text-2xl hover:bg-red-600'>Delete</button>
                     </div>
 
                 </div>
                 <div className={hidden ? "hidden" : ""}>
-                    {noteView && noteView.map(i => <NoteItem onDelete={onDel} key={i.id} id={i.id} title={i.title} content={i.content} updatedAt={i.updatedAt} topic={topic}></NoteItem>)}
+                    {noteView && noteView.map(i => <NoteItem onDelete={onDel} key={i.id} id={i.id} title={i.title} content={i.content} updatedAt={i.updatedAt} topic={topicName}></NoteItem>)}
                 </div>
             </div>
 }

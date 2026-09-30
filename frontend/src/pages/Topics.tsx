@@ -120,10 +120,35 @@ export const Topics: React.FC = () => {
     }
     }
 
+    const editTopic = async (topic:string, callback:Function) => {
+        try {
+          const newTopic = {
+            newTopic: prompt("New name for: " + topic, topic)
+          };
+          if(!newTopic.newTopic || newTopic.newTopic == topic) return;
+            const req = await fetch(`http://localhost:5000/api/topics/${topic}`, {
+                method: "PUT",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newTopic)
+            });
+            const res = await req.json();
+            if(res?.success){
+                alert("Success");
+                callback(newTopic.newTopic)
+            }
+        } catch (err) {
+            alert("fail: " + err);
+        }
+    }
+
+
     const [search, setKeyword] = useState("");
     const onSearch = (ev: ChangeEvent<HTMLInputElement>)=>{
       setKeyword(ev.target.value || "");
     }
+
+
+
   return (
     <div>
         <SearchBar onSearch={onSearch}></SearchBar>
@@ -136,7 +161,7 @@ export const Topics: React.FC = () => {
           <button onClick={createTopic} className='btn bg-blue-400 p-2 text-2xl hover:bg-blue-600'>New Topic</button>
         </div>
       </div>
-        {notes.length > 0 && notes.map(s => <NoteList search={search} onDeleteTopic={deleteTopic} onDelete={handleDelete} key={s} onCreateNote={createNote} topic={s}></NoteList>)}
+        {notes.length > 0 && notes.map(s => <NoteList search={search} onEditTopic={editTopic} onDeleteTopic={deleteTopic} onDelete={handleDelete} key={s} onCreateNote={createNote} topic={s}></NoteList>)}
     </div>
 
   );
