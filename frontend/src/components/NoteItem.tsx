@@ -8,7 +8,7 @@ export default function NoteItem({ id, title, content, topic, updatedAt, onDelet
                     <div>{title}</div>
                     <div className="text-gray-500">{updatedAt}</div>
                 </div>
-                <div>{content.length > 25 ? content.substring(0, 23) + "..." : content}</div>
+                <div className="ml-2">{content.length > 35 ? content.substring(0, 33) + "..." : content}</div>
             </NavLink>
             <button className="btn bg-red-400 p-2 text-2xl hover:bg-red-600" onClick={()=>onDelete(topic, id, title)}>Delete</button>
         </div>

@@ -127,7 +127,7 @@ const compare = (search, content) => {
 }
 // 0. Lấy danh sách ghi chú (GET) - paged - sorted
 app.get('/api/notes', (req, res) => {
-    const perPage = 5;
+    const perPage = 10;
     const page = req.query.page || '1';
     const sort = req.query.sort || "date";
     const search = req.query.s || "";

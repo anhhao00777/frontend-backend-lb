@@ -78,6 +78,24 @@ export const Home: React.FC = () => {
 
 
   }
+
+  const deleteNote = async (topic: string, id: string, title:string, callback:Function) => {
+    const conf = confirm("Are you sure to delete: " + title)
+    if(!conf) return;
+    try {
+      const req = await fetch(`http://localhost:5000/api/notes/${topic}/${id}`, {
+        method: "DELETE",
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const res = await req.json();
+      if (res?.success) {
+        alert("Success: " + res?.message);
+        callback();
+      }
+    } catch (err) {
+      alert("fail: " + err);
+    }
+  }
   return (
     <div>
       <SearchBar onSearch={(onSearch)}></SearchBar>
@@ -103,7 +121,7 @@ export const Home: React.FC = () => {
         </div>
       </div>
       <div className=''>
-        {notes?.map(i => <NoteItem key={i.topic + "." + i.id} id={i.id} topic={i.topic} title={i.title} content={i.content} updatedAt={i.updatedAt} onDelete={() => { }}></NoteItem>)}
+        {notes?.map(i => <NoteItem key={i.topic + "." + i.id} id={i.id} topic={i.topic} title={i.title} content={i.content} updatedAt={i.updatedAt} onDelete={deleteNote}></NoteItem>)}
 
       </div>
     </div>
