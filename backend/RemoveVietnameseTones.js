@@ -1,4 +1,4 @@
-const removeVietnameseTones = (str) => {
+const RemoveVietnameseTones = (str) => {
     if (!str) return '';
     return str
         .normalize('NFD') // Tách ký tự gốc và dấu
@@ -8,3 +8,4 @@ const removeVietnameseTones = (str) => {
         .toLowerCase()
         .trim();
 };
+module.exports = RemoveVietnameseTones;
