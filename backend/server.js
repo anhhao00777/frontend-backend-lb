@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 
 const ContentCryp = require("./ContentCryp");
 
+const removeTones = require('./RemoveVietnameseTones');
 const fs = require('fs');
 const path = require('path');
 const app = express();
@@ -123,7 +124,7 @@ app.delete('/api/topics/:topic', (req, res) => {
 
 
 const compare = (search, content) => {
-    return (content.toLocaleLowerCase().indexOf(search.toLocaleLowerCase()) !== -1);
+    return (removeTones(content.toLocaleLowerCase()).indexOf(removeTones(search.toLocaleLowerCase())) !== -1);
 }
 // 0. Lấy danh sách ghi chú (GET) - paged - sorted
 app.get('/api/notes', (req, res) => {
