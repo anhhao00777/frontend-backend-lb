@@ -104,7 +104,7 @@ export const Home: React.FC = () => {
         </div>
         <div>
 
-          <select className='outline-solid outline-2' onChange={handleSortChange}value={sort}>
+          <select className='outline-solid outline-2 dark:bg-black' onChange={handleSortChange}value={sort}>
             <option value="az">A-Z</option>
             <option value="za">Z-A</option>
             <option value="date" selected>Date</option>

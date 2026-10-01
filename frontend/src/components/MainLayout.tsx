@@ -9,35 +9,30 @@ export const MainLayout: React.FC = () => {
   return (
     <div className={isDark ? 'dark' : ''}>
       <div className="flex min-h-screen bg-slate-100 text-slate-900 transition-colors duration-200 dark:bg-slate-950 dark:text-slate-50">
-        <aside className="w-72 border-r border-slate-200 bg-white/80 px-5 py-6 shadow-sm backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/80">
-          <div className="mb-8 flex items-center gap-3 border-b border-slate-200 pb-4 dark:border-slate-800">
-            <div className="flex h-11 w-11 items-center justify-center bg-blue-600 font-bold text-white shadow-sm">
-              {displayName ? displayName.charAt(0).toUpperCase() : 'U'}
-            </div>
+        <aside className="fixed w-100/100 h-11 overflow-hidden flex items-center justify-between bg-white/80 px-5 py-6 shadow-sm backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/80">
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center bg-blue-600 font-bold text-white shadow-sm">{displayName ? displayName.charAt(0).toUpperCase() : 'U'}</div>
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
-                User
-              </p>
               <span className="text-base font-semibold text-slate-800 dark:text-slate-100">
                 {displayName}
               </span>
             </div>
           </div>
 
-          <nav className="space-y-2">
+          <nav className="h-100/100 flex items-center justify-center">
             <NavLink
               to="/"
               end
               className={({ isActive }) =>
                 [
-                  'block px-3 py-2.5 text-sm font-medium transition-colors',
+                  'block py-4 px-4 text-sm font-medium transition-colors',
                   isActive
-                    ? 'bg-blue-600 text-white shadow-sm'
+                    ? 'bg-blue-600 dark:text-white shadow-sm'
                     : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800',
                 ].join(' ')
               }
             >
-              Trang chủ
+              <i className="fa-solid fa-house"></i>
             </NavLink>
 
             <NavLink
@@ -45,56 +40,56 @@ export const MainLayout: React.FC = () => {
               end
               className={({ isActive }) =>
                 [
-                  'block px-3 py-2.5 text-sm font-medium transition-colors',
+                  'block  py-4 px-4 text-sm font-medium transition-colors',
                   isActive
-                    ? 'bg-blue-600 text-white shadow-sm'
+                    ? 'bg-blue-600 dark:text-white shadow-sm'
                     : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800',
                 ].join(' ')
               }
             >
-              Topics
+              <i className="fa-solid fa-list"></i>
             </NavLink>
 
             <NavLink
               to="/private"
               className={({ isActive }) =>
                 [
-                  'block px-3 py-2.5 text-sm font-medium transition-colors',
+                  'block  py-4 px-4 text-sm font-medium transition-colors',
                   isActive
-                    ? 'bg-blue-600 text-white shadow-sm'
+                    ? 'bg-blue-600 dark:text-white shadow-sm'
                     : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800',
                 ].join(' ')
               }
             >
-              Private
+              <i className="fa-solid fa-shield-halved"></i>
             </NavLink>
 
             <NavLink
               to="/settings"
               className={({ isActive }) =>
                 [
-                  'block px-3 py-2.5 text-sm font-medium transition-colors',
+                  'block py-4 px-4 text-sm font-medium transition-colors',
                   isActive
-                    ? 'bg-blue-600 text-white shadow-sm'
+                    ? 'bg-blue-600 dark:text-white shadow-sm'
                     : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800',
                 ].join(' ')
               }
             >
-              Cài đặt
+              <i className="fa-solid fa-gear"></i>
             </NavLink>
           </nav>
 
           <button
             type="button"
             onClick={toggleTheme}
-            className="mt-8 inline-flex w-full items-center justify-center gap-2 border border-slate-200 bg-slate-100 px-3 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+            className="items-center px-4 h-10 justify-center gap-2 border border-slate-200 bg-slate-100 text-sm font-medium text-slate-700 transition hover:bg-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
           >
             <span aria-hidden="true">{isDark ? '☀️' : '🌙'}</span>
-            {isDark ? 'Chế độ sáng' : 'Chế độ tối'}
+            {isDark ? 'Light' : 'Dark'}
           </button>
         </aside>
 
-        <main className="flex-1 p-6 md:p-10">
+        <main className="flex-1 p-6 md:p-10 mt-5">
           <div className="mx-auto max-w-6xl">
             <Outlet />
           </div>
