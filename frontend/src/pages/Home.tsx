@@ -104,7 +104,7 @@ export const Home: React.FC = () => {
         </div>
         <div>
 
-          <select className='outline-solid outline-2 dark:bg-black' onChange={handleSortChange}value={sort}>
+          <select className='outline-solid outline-2 p-2 dark:bg-black' onChange={handleSortChange}value={sort}>
             <option value="az">A-Z</option>
             <option value="za">Z-A</option>
             <option value="date" selected>Date</option>
@@ -112,7 +112,7 @@ export const Home: React.FC = () => {
           </select>
 
           <button onClick={()=>{ let pg = parseInt(page);setPage((pg-1)>0 ? pg-1 + "" : "1")}} className='btn bg-blue-400 p-2 text-2xl hover:bg-blue-600'>Prev</button>
-          <input type="number" onChange={handlePageChange} value={page} className='w-15'/>
+          <input type="number" onChange={handlePageChange} value={page} className='w-15 outline-none p-2'/>
           <button onClick={()=>setPage((parseInt(page)+1)+"")} className='btn bg-blue-400 p-2 text-2xl hover:bg-blue-600'>Next</button>
 
           <button onClick={()=>createNote("no-topic")} className='btn bg-green-400 p-2 text-2xl hover:bg-green-600'>New</button>
